@@ -1,38 +1,15 @@
 const {test, expect, request} = require('@playwright/test');
+const {APIUtils} = require('./utils/APIUtils');
 
 const loginPayload = {userEmail: "qasdet1544@gmail.com", userPassword: "ThisScenarioFailedNoSpecialCharactersInPwd2024"}; 
-let token;
-let orderId;
+const orderPayload = {orders: [{country: "United States", productOrderedId: "6581ca979fd99c85e8ee7faf"}]};
+let response;
 
 test.beforeAll( async ()=>
 {
-    const apiContext = await request.newContext();
-    const loginResponse = await apiContext.post("https://rahulshettyacademy.com/api/ecom/auth/login", 
-        {
-            data: loginPayload
-
-        });
-
-    expect(loginResponse.ok()).toBeTruthy();
-    const responseJson = await loginResponse.json();
-    token = responseJson.token;
-    console.log(token);        
-
-    const orderPayload = {orders: [{country: "United States", productOrderedId: "6581ca979fd99c85e8ee7faf"}]};
-    const orderResponse = await apiContext.post("https://rahulshettyacademy.com/api/ecom/order/create-order",
-        {
-            data: orderPayload,
-            headers: {
-                "Authorization": token,
-                "Content-Type": "application/json"
-
-            },
-        }
-    );
-    const orderResponseJson = await orderResponse.json();
-    console.log(orderResponseJson);
-    orderId = orderResponseJson.orders[0];
-    console.log(orderId);
+    const apiContext = await request.newContext();     
+    const apiUtils = new APIUtils(apiContext, loginPayload);   
+    response = await apiUtils.createOrder(orderPayload);
 
 });
 
@@ -110,7 +87,7 @@ test.beforeAll( async ()=>
         {
             await page.addInitScript(value => {
                 window.localStorage.setItem('token', value);
-            }, token);           
+            }, response.token);           
 
             await page.goto("https://rahulshettyacademy.com/client/");
             await page.locator('button[routerlink="/dashboard/myorders"]').click();
@@ -119,14 +96,14 @@ test.beforeAll( async ()=>
 
             for(let i=0; i<await orderIdsLoc.count(); i++){
                 const orderIdDetail = await orderIdsLoc.nth(i).locator('th').textContent();
-                if(orderId.includes(orderIdDetail)){
+                if(response.orderId.includes(orderIdDetail)){
                     console.log(orderIdDetail);
                     await orderIdsLoc.nth(i).locator("button").first().click();
                     break;
                 }
             }
             const orderIdSummary = await page.locator(".col-text").textContent();
-            expect(orderId.includes(orderIdSummary)).toBeTruthy();
+            expect(response.orderId.includes(orderIdSummary)).toBeTruthy();
             
 
         });
