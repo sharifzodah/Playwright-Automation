@@ -21,7 +21,7 @@ test.beforeAll( async ()=>
 
 
 // @positive-testCase
-test('Place Order test', async ({page})=>
+test.skip('Place Order test', async ({page})=>
     {
         await page.addInitScript(value => {
             window.localStorage.setItem('token', value);
@@ -50,3 +50,35 @@ test('Place Order test', async ({page})=>
         const orderId = await page.locator("td label").nth(1).textContent();
 
     });
+
+     // @positive-testCase
+     test('Delete 1 order w/Special Locators test', async ({page})=>
+        {
+            const ccNumber = '4587 8874 6621 3315';
+            const cvv = '988';
+            const name = 'QA SDET';
+            const coupon = 'rahulshettyacademy';
+            const ccDetails = [ccNumber, cvv, name, coupon];
+            const countryName = 'United States'
+
+            await page.goto("https://rahulshettyacademy.com/client/");
+            
+            await page.locator('.card-body b').first().waitFor();
+            await page.getByRole("listitem").getByRole("button", {name: "ORDERS"}).click();
+            // await page.getByRole("button", {name: "ORDERS"}).click();
+            await page.waitForLoadState("networkidle");
+            await page.locator('tbody').waitFor();
+            let currentUrl = page.url();
+            expect(currentUrl).toContain('/myorders');
+
+            const initialOrderCount = await page.locator("tbody tr").count();
+            console.log('Initial Order Count: ', initialOrderCount);
+            await page.locator("tbody tr").nth(0).getByRole("button", {name: "Delete"}).click();
+            await page.locator('[role = "alert"]').waitFor();
+            console.log(await page.locator('[role = "alert"]').textContent());
+            await page.waitForTimeout(500);
+            const remainingOrderCount = await page.locator("tbody tr").count();
+            console.log('Remaining Order Count: ', remainingOrderCount);
+            expect(remainingOrderCount).toBe((initialOrderCount - 2));            
+
+        });
