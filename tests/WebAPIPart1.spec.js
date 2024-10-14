@@ -2,6 +2,7 @@ const {test, expect, request} = require('@playwright/test');
 
 const loginPayload = {userEmail: "qasdet1544@gmail.com", userPassword: "ThisScenarioFailedNoSpecialCharactersInPwd2024"}; 
 let token;
+let orderId;
 
 test.beforeAll( async ()=>
 {
@@ -16,6 +17,22 @@ test.beforeAll( async ()=>
     const responseJson = await loginResponse.json();
     token = responseJson.token;
     console.log(token);        
+
+    const orderPayload = {orders: [{country: "United States", productOrderedId: "6581ca979fd99c85e8ee7faf"}]};
+    const orderResponse = await apiContext.post("https://rahulshettyacademy.com/api/ecom/order/create-order",
+        {
+            data: orderPayload,
+            headers: {
+                "Authorization": token,
+                "Content-Type": "application/json"
+
+            },
+        }
+    );
+    const orderResponseJson = await orderResponse.json();
+    console.log(orderResponseJson);
+    orderId = orderResponseJson.orders[0];
+    console.log(orderId);
 
 });
 
@@ -85,5 +102,31 @@ test.beforeAll( async ()=>
             const remainingOrderCount = await page.locator("tbody tr").count();
             console.log('Remaining Order Count: ', remainingOrderCount);
             expect(remainingOrderCount).toBe((initialOrderCount - 1));            
+
+        });
+
+        // @positive-testCase
+    test.only('Place Order w/API test', async ({page})=>
+        {
+            await page.addInitScript(value => {
+                window.localStorage.setItem('token', value);
+            }, token);           
+
+            await page.goto("https://rahulshettyacademy.com/client/");
+            await page.locator('button[routerlink="/dashboard/myorders"]').click();
+            await page.locator('tbody').waitFor();
+            const orderIdsLoc = page.locator('tbody tr');
+
+            for(let i=0; i<await orderIdsLoc.count(); i++){
+                const orderIdDetail = await orderIdsLoc.nth(i).locator('th').textContent();
+                if(orderId.includes(orderIdDetail)){
+                    console.log(orderIdDetail);
+                    await orderIdsLoc.nth(i).locator("button").first().click();
+                    break;
+                }
+            }
+            const orderIdSummary = await page.locator(".col-text").textContent();
+            expect(orderId.includes(orderIdSummary)).toBeTruthy();
+            
 
         });
