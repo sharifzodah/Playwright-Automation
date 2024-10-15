@@ -65,10 +65,10 @@ test('Delete order w/Special Locators test', async ()=>
         await page.locator("tbody tr").nth(0).getByRole("button", {name: "Delete"}).click();
         await page.locator('[role = "alert"]').waitFor();
         console.log(await page.locator('[role = "alert"]').textContent());
-        await page.waitForTimeout(500);
         await page.waitForLoadState("networkidle");
+        await page.waitForTimeout(150);     
         const remainingOrderCount = await page.locator("tbody tr").count();
-        console.log('Remaining Order Count: ', remainingOrderCount);
-        expect(remainingOrderCount).toBe((initialOrderCount - 1));            
+        console.log('Remaining Order Count: ', await remainingOrderCount);
+        expect(remainingOrderCount).toEqual((initialOrderCount - 1));            
 
     });
