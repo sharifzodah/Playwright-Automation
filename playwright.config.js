@@ -20,7 +20,7 @@ const config = {
 
 module.exports = config;
 
-
+//trace.playwright.dev - to trace all your logs
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
