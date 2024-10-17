@@ -15,7 +15,8 @@ test.beforeAll( async ()=>
 
 //To debug API test case: 1. Add "npx playwright test tests/WebAPIPart1.spec.js --headed" in test section of package.json file
 //                        2. Add a breakpoint on line that runs API requests
-//                        3. Ctrl+Shift P => type Debug npm Script
+//                        3. Increase timeout value to e.g. 100 * 1000 in playwright.config.js file
+//                        4. Ctrl+Shift P => type Debug npm Script
 
 // @positive-testCase
     test('Place Order test', async ({page})=>
