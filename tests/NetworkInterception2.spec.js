@@ -16,7 +16,7 @@ test("Security request intercept test", async ({ page }) => {
     await page.locator('button[routerlink*="myorders"]').click();
 
     await page.route("https://rahulshettyacademy.com/api/ecom/order/get-orders-details?id=*",
-        route => route.continue({ url: 'https://rahulshettyacademy.com/api/ecom/order/get-orders-details?id=6710565aae2afd4c0b9dd655' }));
+        route => route.continue({url: 'https://rahulshettyacademy.com/api/ecom/order/get-orders-details?id=6710565aae2afd4c0b9dd655'}));
     await page.locator("button:has-text('View')").first().click();
     const errorText = await page.locator(".blink_me").textContent();
     console.log(errorText);
