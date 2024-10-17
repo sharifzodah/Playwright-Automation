@@ -1,7 +1,7 @@
 const { test, expect, request } = require("@playwright/test");
 
 
-test("Security test request intercept test", async ({ page }) => {
+test("Security request intercept test", async ({ page }) => {
     const userLogin = 'qasdet1544@gmail.com';
     const userPwd = 'ThisScenarioFailedNoSpecialCharactersInPwd2024';
 
