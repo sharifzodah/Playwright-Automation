@@ -13,14 +13,15 @@ const config = {
   use: {
 
     browserName: 'chromium', // 'webkit' for safari  | 'chromium' for chrome  | 'firefox' for firefox
-    headless: false
+    headless: false,
+    //trace: 'retain-on-failure',
 
   },
 };
 
 module.exports = config;
 
-//trace.playwright.dev - to trace all your logs
+//***trace.playwright.dev - to trace all your logs**//
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
