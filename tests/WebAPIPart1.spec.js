@@ -103,11 +103,11 @@ test.beforeAll( async ()=>
                 if(response.orderId.includes(orderIdDetail)){
                     console.log(orderIdDetail);
                     await orderIdsLoc.nth(i).locator("button").first().click();
+                    await page.pause();
                     break;
                 }
             }
             const orderIdSummary = await page.locator(".col-text").textContent();
-            expect(response.orderId.includes(orderIdSummary)).toBeTruthy();
-            
+            expect(response.orderId.includes(orderIdSummary)).toBeTruthy();            
 
         });     

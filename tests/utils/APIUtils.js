@@ -9,8 +9,7 @@ class APIUtils
     {
         const loginResponse = await this.apiContext.post("https://rahulshettyacademy.com/api/ecom/auth/login", 
             {
-                data: this.loginPayload
-    
+                data: this.loginPayload,  
             });
     
         const responseJson = await loginResponse.json();
