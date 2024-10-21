@@ -1,6 +1,7 @@
 const { test, expect } = require("@playwright/test");
 const ExcelJS = require('exceljs');   //to load exceljs library add dependency in package.jason 
                                     //and in terminal run: npm install exceljs --savedev
+const fs = require('fs'); // Import file system module
 
 async function writeExcel(searchText, newText, changeCoord, filePath) 
 {    
@@ -50,7 +51,7 @@ test("Excel download and upload", async({page}) =>
         await page.locator("#fileinput").setInputFiles(filePath); 
         const textLoc = page.getByText(searchText);
         const desiredRow = await page.getByRole('row').filter({has: textLoc});
-        console.log(await desiredRow.locator('#cell-4-undefined'));
         await expect(desiredRow.locator("#cell-4-undefined")).toContainText(newText);
+        fs.unlinkSync(filePath);
     
     });
