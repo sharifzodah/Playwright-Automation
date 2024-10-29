@@ -52,6 +52,13 @@ test("Excel download and upload", async({page}) =>
         const textLoc = page.getByText(searchText);
         const desiredRow = await page.getByRole('row').filter({has: textLoc});
         await expect(desiredRow.locator("#cell-4-undefined")).toContainText(newText);
-        fs.unlinkSync(filePath);
+        //fs.unlinkSync(filePath);
+        fs.unlink(filePath, (err) => {
+            if (err){
+                console.log("Error deleting file: ", err);
+            } else{
+                console.log("File deleted successfully.");
+            }
+        });
     
     });
