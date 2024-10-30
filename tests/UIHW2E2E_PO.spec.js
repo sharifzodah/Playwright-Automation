@@ -1,39 +1,31 @@
 const {test, expect} = require('@playwright/test');
-const exp = require('constants');
+const {LoginPage} = require('../pageObjects/LoginPage');
     
     // @positive-testCase
     test('E2E Checkout test', async ({page})=>
         {        
-            const userLogin = 'qasdet1544@gmail.com';
-            const userPwd = 'ThisScenarioFailedNoSpecialCharactersInPwd2024';
+            const username = 'qasdet1544@gmail.com';
+            const password = 'ThisScenarioFailedNoSpecialCharactersInPwd2024';
             const ccNumber = '4587 8874 6621 3315';
             const cvv = '988';
             const name = 'QA SDET';
             const coupon = 'rahulshettyacademy';
             const ccDetails = [ccNumber, cvv, name, coupon];
             const countryName = 'United States'
-                    
-            await page.goto("https://rahulshettyacademy.com/client/");
-        
-            const pageTitle = await page.title();
-            let currentUrl = page.url();
-        
-            console.log(pageTitle);
-            console.log(currentUrl);
+            const loginPage = new LoginPage(page);
+            
+            //Landing to the page
+            await loginPage.landingPage();
+            const pageTitle = await loginPage.getPageTitle();
+            let currentUrl = await loginPage.getPageURL();
             expect(pageTitle).toContain("Let's Shop");
             expect(currentUrl).toContain('/client/auth/login');
 
-            //Login section
-            const emailLoc = page.locator("[formcontrolname='userEmail']");
-            const pwdLoc = page.locator("[formcontrolname='userPassword']");
-            const loginBtn = page.locator('[value="Login"]');
-    
-            await emailLoc.fill(userLogin);
-            await pwdLoc.fill(userPwd);       
-            await loginBtn.click();
+            //Login to the page
+            loginPage.validLogin(username, password);
 
             await page.waitForLoadState('networkidle');
-            currentUrl = page.url()
+            currentUrl = await loginPage.getPageURL();
             expect(currentUrl).toContain('dashboard');
             console.log(currentUrl);
 
@@ -120,7 +112,7 @@ const exp = require('constants');
                     break;
                 }
             }
-            await expect(page.locator('.user__name label')).toHaveText(userLogin);
+            await expect(page.locator('.user__name label')).toHaveText(username);
 
             await page.locator("[type='submit']").click();
             await page.waitForLoadState('networkidle');
@@ -171,10 +163,9 @@ const exp = require('constants');
                 const billEmail = await addressSummary.nth(0).textContent();
                 const deliveryEmail = await addressSummary.nth(2).textContent();
                 const billCountry = await addressSummary.nth(1).textContent();
-                console.log(billCountry);
                 const deliveryCountry = await addressSummary.nth(3).textContent();
                 expect(billEmail).toBe(deliveryEmail);
-                expect(billEmail.trim()).toBe(userLogin);
+                expect(billEmail.trim()).toBe(username);
                 expect(billCountry).toBe(deliveryCountry);
                 expect(billCountry.includes(countryName)).toBeTruthy();
                 await page.locator('.-teal').click();
