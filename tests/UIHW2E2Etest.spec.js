@@ -22,7 +22,8 @@ const exp = require('constants');
             console.log(currentUrl);
             expect(pageTitle).toContain("Let's Shop");
             expect(currentUrl).toContain('/client/auth/login');
-        
+
+            //Login section
             const emailLoc = page.locator("[formcontrolname='userEmail']");
             const pwdLoc = page.locator("[formcontrolname='userPassword']");
             const loginBtn = page.locator('[value="Login"]');
