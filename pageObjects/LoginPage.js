@@ -12,6 +12,7 @@ class LoginPage{
         await this.userName.fill(username);
         await this.password.fill(password);
         await this.signInbutton.click();
+        await this.page.waitForLoadState('networkidle');
     }
     async landingPage()
     {
@@ -26,7 +27,7 @@ class LoginPage{
         return pageTitle;
     }
 
-    async getPageURL()
+    async getLoginURL()
     {
         const currentUrl = await this.page.url();        
         console.log(currentUrl);

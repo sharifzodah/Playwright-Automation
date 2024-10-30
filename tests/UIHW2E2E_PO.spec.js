@@ -1,5 +1,6 @@
 const {test, expect} = require('@playwright/test');
 const {LoginPage} = require('../pageObjects/LoginPage');
+const {DashboardPage} = require('../pageObjects/DashboardPage');
     
     // @positive-testCase
     test('E2E Checkout test', async ({page})=>
@@ -17,43 +18,26 @@ const {LoginPage} = require('../pageObjects/LoginPage');
             //Landing to the page
             await loginPage.landingPage();
             const pageTitle = await loginPage.getPageTitle();
-            let currentUrl = await loginPage.getPageURL();
+            let currentUrl = await loginPage.getLoginURL();
             expect(pageTitle).toContain("Let's Shop");
             expect(currentUrl).toContain('/client/auth/login');
 
             //Login to the page
-            loginPage.validLogin(username, password);
+            await loginPage.validLogin(username, password);
 
-            await page.waitForLoadState('networkidle');
-            currentUrl = await loginPage.getPageURL();
+            //Adding n number of random items to cart
+            const dashboardPage = new DashboardPage(page);
+            currentUrl = await dashboardPage.getDashboardURL();
             expect(currentUrl).toContain('dashboard');
-            console.log(currentUrl);
 
-            const products = page.locator('.card-body');
-            const prdCounts = await products.count();
-            console.log(prdCounts);
-
-            //Adding random two items to cart
-            const productArr = [];
-            for(let i=0; i < prdCounts; i++){
-                let rndIndex = Math.floor(Math.random()*prdCounts);
-                const prdName = await products.nth(rndIndex).locator('b').textContent();
-                if(!productArr.includes(prdName)){
-                productArr.push(prdName);
-                const addToCart = products.nth(rndIndex).locator("text=  Add To Cart"); 
-                console.log(prdName);
-                await addToCart.click();  
-                }
-                if(productArr.length === 2){break;}
-            }
-
-            const cartBtn = page.locator('[routerlink="/dashboard/cart"]');
-            await cartBtn.click();        
-            currentUrl = page.url();
+            const productCount = await dashboardPage.products.count();
+            console.log(productCount);
+            const productArr = await dashboardPage.addToCartRandomItems(productCount);
+            await dashboardPage.navigateToCart();    
+            currentUrl = await dashboardPage.getDashboardURL();
             expect(currentUrl).toContain('cart');
 
             // Cart Section
-            await page.waitForLoadState('networkidle');
             const crtHeader = await page.locator("text=My Cart").textContent();
             expect(crtHeader).toBe('My Cart');
 
