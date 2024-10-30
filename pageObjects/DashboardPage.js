@@ -14,7 +14,7 @@ class DashboardPage
         const productArr = [];
         console.log(productCount);
         while(productArr.length !== itemNumber){
-            let randomIndex = Math.floor(Math.random()*itemNumber);
+            let randomIndex = Math.floor(Math.random()*productCount);
             console.log(randomIndex);
             const productName = await this.products.nth(randomIndex).locator('b').textContent();
             if(!productArr.includes(productName))

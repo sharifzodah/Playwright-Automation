@@ -30,9 +30,7 @@ const {DashboardPage} = require('../pageObjects/DashboardPage');
             currentUrl = await dashboardPage.getDashboardURL();
             expect(currentUrl).toContain('dashboard');
 
-            const productCount = await dashboardPage.products.count();
-            console.log(productCount);
-            const productArr = await dashboardPage.addToCartRandomItems(productCount);
+            const productArr = await dashboardPage.addToCartRandomItems(4);
             await dashboardPage.navigateToCart();    
             currentUrl = await dashboardPage.getDashboardURL();
             expect(currentUrl).toContain('cart');
