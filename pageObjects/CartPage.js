@@ -43,7 +43,7 @@ class CartPage
             let itemPrice = await this.itemPrices.nth(i).textContent();
             itemsTotal += parseFloat(itemPrice.replace("$", ""), 10);
         }
-        console.log("Total Amount:\t$", totalAmount, "\nItems Total:\t$", itemsTotal);
+        console.log("Total Amount:\t$",totalAmount, "\nItems Total:\t$",itemsTotal);
         this.expect(totalAmount).toBe(itemsTotal);
     }
 

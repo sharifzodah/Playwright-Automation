@@ -47,10 +47,12 @@ const {CartPage} = require('../pageObjects/CartPage');
             await page.locator('.col-md-5').waitFor();
             
             const amountArr = [];
+            console.log(productsFromCart);
             for(let i = 0; i < productsFromCart.length; i++){
                 amountArr.push(await page.locator('.item__price').nth(i).textContent());
                 const itemTitle = await page.locator('.item__title').nth(i).textContent();
-                expect(productsFromCart.includes(itemTitle.trim())).toBeTruthy();
+                console.log(itemTitle);
+                expect(productsFromCart[i].productName).toContain(itemTitle.trim());
             }
 
             let cartTotal = 0;
