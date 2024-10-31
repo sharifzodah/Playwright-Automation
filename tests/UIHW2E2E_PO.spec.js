@@ -30,7 +30,7 @@ const {DashboardPage} = require('../pageObjects/DashboardPage');
             currentUrl = await dashboardPage.getDashboardURL();
             expect(currentUrl).toContain('dashboard');
 
-            const productArr = await dashboardPage.addToCartRandomItems(4);
+            const productsAddedToCart = await dashboardPage.addToCartRandomItems(4);
             await dashboardPage.navigateToCart();    
             currentUrl = await dashboardPage.getDashboardURL();
             expect(currentUrl).toContain('cart');
@@ -39,23 +39,24 @@ const {DashboardPage} = require('../pageObjects/DashboardPage');
             const crtHeader = await page.locator("text=My Cart").textContent();
             expect(crtHeader).toBe('My Cart');
 
-            const cart = page.locator('.cart')
-            const cartArr = [];
-            for(let i=0; i<productArr.length; i++){
-                cartArr.push(await cart.locator('li h3').nth(i).textContent());
+            const cart = page.locator('.cart');
+            const cartItems = cart.locator("li");
+            const itemIDs = cartItems.locator("p.itemNumber");
+
+            const productsFromCart = [];
+            for(let i=0; i<productsAddedToCart.length; i++){
+                let productNo = await itemIDs.nth(i).textContent();
+                productNo = productNo.replace("#", "");
+                const productName = await cartItems.locator('h3').nth(i).textContent();
+                productsFromCart.push({productNo, productName});
+                console.log("Item No: ", productNo, " | ",  "Item Name: ", productName);
+                expect(productsAddedToCart.includes(productsFromCart[i].productName)).toBeTruthy();
             }
-            const itemNo = [];
-            for(let i=0; i<cartArr.length; i++){
-                const id = await cart.locator('p.itemNumber').nth(i).textContent();
-                itemNo.push(id.replace("#", ""));
-                // expect(productArr[i]).toBe(cartArr[i]);
-                expect(productArr.includes(cartArr[i])).toBeTruthy();
-            }
+
             const totalAmnt = await page.locator('span.value').last().textContent();
             console.log(totalAmnt)
-            console.log(productArr);
-            console.log(cartArr);
-            console.log(itemNo);
+            console.log(productsAddedToCart);
+            console.log(productsFromCart);
             const checkOut = page.locator("text=Checkout");
             await checkOut.click();
 
@@ -63,10 +64,10 @@ const {DashboardPage} = require('../pageObjects/DashboardPage');
             await page.locator('.col-md-5').waitFor();
             
             const amountArr = [];
-            for(let i = 0; i < cartArr.length; i++){
+            for(let i = 0; i < productsFromCart.length; i++){
                 amountArr.push(await page.locator('.item__price').nth(i).textContent());
                 const itemTitle = await page.locator('.item__title').nth(i).textContent();
-                expect(cartArr.includes(itemTitle.trim())).toBeTruthy();
+                expect(productsFromCart.includes(itemTitle.trim())).toBeTruthy();
             }
 
             let cartTotal = 0;
