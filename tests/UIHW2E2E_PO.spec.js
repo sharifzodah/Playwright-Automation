@@ -1,6 +1,7 @@
 const {test, expect} = require('@playwright/test');
 const {LoginPage} = require('../pageObjects/LoginPage');
 const {DashboardPage} = require('../pageObjects/DashboardPage');
+const {CartPage} = require('../pageObjects/CartPage');
     
     // @positive-testCase
     test('E2E Checkout test', async ({page})=>
@@ -36,22 +37,9 @@ const {DashboardPage} = require('../pageObjects/DashboardPage');
             expect(currentUrl).toContain('cart');
 
             // Cart Section
-            const crtHeader = await page.locator("text=My Cart").textContent();
-            expect(crtHeader).toBe('My Cart');
-
-            const cart = page.locator('.cart');
-            const cartItems = cart.locator("li");
-            const itemIDs = cartItems.locator("p.itemNumber");
-
-            const productsFromCart = [];
-            for(let i=0; i<productsAddedToCart.length; i++){
-                let productNo = await itemIDs.nth(i).textContent();
-                productNo = productNo.replace("#", "");
-                const productName = await cartItems.locator('h3').nth(i).textContent();
-                productsFromCart.push({productNo, productName});
-                console.log("Item No: ", productNo, " | ",  "Item Name: ", productName);
-                expect(productsAddedToCart.includes(productsFromCart[i].productName)).toBeTruthy();
-            }
+            const cartPage = new CartPage(page);
+            cartPage.verifyHeader();
+            cartPage.verifyAddedItemsInCart(productsAddedToCart);
 
             const totalAmnt = await page.locator('span.value').last().textContent();
             console.log(totalAmnt)
