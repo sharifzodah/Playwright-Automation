@@ -37,16 +37,11 @@ const {CartPage} = require('../pageObjects/CartPage');
             expect(currentUrl).toContain('cart');
 
             // Cart Section
-            const cartPage = new CartPage(page);
-            cartPage.verifyHeader();
-            cartPage.verifyAddedItemsInCart(productsAddedToCart);
-
-            const totalAmnt = await page.locator('span.value').last().textContent();
-            console.log(totalAmnt)
-            console.log(productsAddedToCart);
-            console.log(productsFromCart);
-            const checkOut = page.locator("text=Checkout");
-            await checkOut.click();
+            const cartPage = new CartPage(page, expect);
+            await cartPage.verifyHeader();
+            const productsFromCart = await cartPage.verifyAddedItemsInCart(productsAddedToCart);
+            await cartPage.verifyTotalAmount(productsAddedToCart.length);
+            await cartPage.checkOut();
 
             // Payment Section
             await page.locator('.col-md-5').waitFor();
