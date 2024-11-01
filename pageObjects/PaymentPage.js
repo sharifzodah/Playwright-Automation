@@ -25,7 +25,8 @@ class PaymentPage
     async verifyHeader()
     {
         await this.page.waitForLoadState('networkidle');
-        this.expect(await this.header.textContent().trim()).toBe('Payment Method');
+        const header = await this.header.textContent();
+        this.expect(header.trim()).toBe('Payment Method');
     }
 
     async verifyItemsInPaymentSection2(productsAddedToCart)
@@ -41,9 +42,9 @@ class PaymentPage
     async verifyItemsInPaymentSection(productsFromCart)
     {
         for(let i = 0; i < productsFromCart.length; i++){
-            const itemTitle = await page.locator('.item__title').nth(i).textContent();
+            const itemTitle = await this.page.locator('.item__title').nth(i).textContent();
             console.log(itemTitle);
-            expect(await productsFromCart.filter(product => product.productName === itemTitle)).toBeTruthy();
+            this.expect(await productsFromCart.filter(product => product.productName === itemTitle)).toBeTruthy();
         }
     }
 
@@ -60,13 +61,13 @@ class PaymentPage
 
     async verifyUserName(userName)
     {
-        await expect(this.userNameLabel).toHaveText(userName);
+        await this.expect(this.userNameLabel).toHaveText(userName);
     }
 
     async fillOutCardDetails(cardDetails)
     {
         for(let i=0; i<cardDetails.length; i++){
-            page.locator(await this.cardInfo.nth(i).fill(cardDetails[i]));
+            this.page.locator(await this.cardInfo.nth(i).fill(cardDetails[i]));
         }
     }
 
@@ -88,7 +89,7 @@ class PaymentPage
     async applyCoupon()
     {
         await this.applyCoupon.click();
-        await page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('networkidle');
 
     }
 
