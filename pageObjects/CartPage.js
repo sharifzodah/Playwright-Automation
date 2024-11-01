@@ -45,6 +45,7 @@ class CartPage
         }
         console.log("Total Amount:\t$",totalAmount, "\nItems Total:\t$",itemsTotal);
         this.expect(totalAmount).toBe(itemsTotal);
+        return totalAmount;
     }
 
     async checkOut()

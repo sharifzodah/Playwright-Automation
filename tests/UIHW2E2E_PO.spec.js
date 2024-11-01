@@ -2,17 +2,18 @@ const {test, expect} = require('@playwright/test');
 const {LoginPage} = require('../pageObjects/LoginPage');
 const {DashboardPage} = require('../pageObjects/DashboardPage');
 const {CartPage} = require('../pageObjects/CartPage');
+const {PaymentPage} = require('../pageObjects/PaymentPage');
     
     // @positive-testCase
     test('E2E Checkout test', async ({page})=>
         {        
-            const username = 'qasdet1544@gmail.com';
+            const userName = 'qasdet1544@gmail.com';
             const password = 'ThisScenarioFailedNoSpecialCharactersInPwd2024';
             const ccNumber = '4587 8874 6621 3315';
             const cvv = '988';
             const name = 'QA SDET';
             const coupon = 'rahulshettyacademy';
-            const ccDetails = [ccNumber, cvv, name, coupon];
+            const cardDetails = [ccNumber, cvv, name, coupon];
             const countryName = 'United States'
             const loginPage = new LoginPage(page);
             
@@ -24,7 +25,7 @@ const {CartPage} = require('../pageObjects/CartPage');
             expect(currentUrl).toContain('/client/auth/login');
 
             //Login to the page
-            await loginPage.validLogin(username, password);
+            await loginPage.validLogin(userName, password);
 
             //Adding n number of random items to cart
             const dashboardPage = new DashboardPage(page);
@@ -40,50 +41,20 @@ const {CartPage} = require('../pageObjects/CartPage');
             const cartPage = new CartPage(page, expect);
             await cartPage.verifyHeader();
             const productsFromCart = await cartPage.verifyAddedItemsInCart(productsAddedToCart);
-            await cartPage.verifyTotalAmount(productsAddedToCart.length);
+            const totalAmount = await cartPage.verifyTotalAmount(productsAddedToCart.length);
             await cartPage.checkOut();
 
             // Payment Section
-            await page.locator('.col-md-5').waitFor();
-            
-            const amountArr = [];
-            console.log(productsFromCart);
-            for(let i = 0; i < productsFromCart.length; i++){
-                amountArr.push(await page.locator('.item__price').nth(i).textContent());
-                const itemTitle = await page.locator('.item__title').nth(i).textContent();
-                console.log(itemTitle);
-                expect(productsFromCart[i].productName).toContain(itemTitle.trim());
-            }
-
-            let cartTotal = 0;
-            for(let i=0; i < amountArr.length; i++){
-                cartTotal += parseInt(amountArr[i].replace('$', ''), 10)
-            }
-            console.log(cartTotal);
-            expect(cartTotal).toBe(parseInt(totalAmnt.replace('$', ''), 10));
-
-            const ccLoc = page.locator('.payment__cc input');
-
-            for(let i=0; i<ccDetails.length; i++){
-                page.locator(await ccLoc.nth(i).fill(ccDetails[i]));
-            }
-
-            await page.locator('[placeholder="Select Country"]').pressSequentially('unit', {delay: 150});
-            const countryOpts = page.locator('.ta-results');
-            await countryOpts.waitFor();
-            const contryCount = await countryOpts.locator('button').count();
-
-            for(let i=0; i<contryCount; i++){
-                const text = await countryOpts.locator('button').nth(i).textContent();
-                if( text.trim() === countryName){
-                    await countryOpts.locator('button').nth(i).click();
-                    break;
-                }
-            }
-            await expect(page.locator('.user__name label')).toHaveText(username);
-
-            await page.locator("[type='submit']").click();
-            await page.waitForLoadState('networkidle');
+            const paymentPage = new PaymentPage(page, expect);
+            await paymentPage.loadCartItems();
+            await paymentPage.verifyHeader();
+            await paymentPage.verifyItemsInPaymentSection(productsFromCart);
+            await paymentPage.verifyTotalAmount(productsAddedToCart.length, totalAmount);
+            await paymentPage.verifyUserName(userName);
+            await paymentPage.fillOutCardDetails(cardDetails);
+            await paymentPage.fillOutShippingDetails(countryName);
+            await paymentPage.applyCoupon();
+            await paymentPage.placeOrder();
 
             await page.locator('.action__submit').click();
             await expect(page.locator('.hero-primary')).toHaveText(" Thankyou for the order. ");
@@ -133,7 +104,7 @@ const {CartPage} = require('../pageObjects/CartPage');
                 const billCountry = await addressSummary.nth(1).textContent();
                 const deliveryCountry = await addressSummary.nth(3).textContent();
                 expect(billEmail).toBe(deliveryEmail);
-                expect(billEmail.trim()).toBe(username);
+                expect(billEmail.trim()).toBe(userName);
                 expect(billCountry).toBe(deliveryCountry);
                 expect(billCountry.includes(countryName)).toBeTruthy();
                 await page.locator('.-teal').click();
