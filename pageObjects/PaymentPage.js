@@ -12,8 +12,9 @@ class PaymentPage
         this.countryOpts = page.locator('.ta-results');
         this.countryOptsList = this.countryOpts.locator('button');
         this.userNameLabel = page.locator('.user__name label');
-        this.applyCoupon = page.locator("[type='submit']");
-        this.placeOrder = page.locator('.action__submit');
+        this.couponButton = page.locator("[type='submit']");
+        this.couponApplied = page.locator("text=* Coupon Applied");
+        this.orderButton = page.locator('.action__submit');
         this.cartItemsBox = page.locator('.col-md-5')
     }
 
@@ -88,14 +89,15 @@ class PaymentPage
 
     async applyCoupon()
     {
-        await this.applyCoupon.click();
+        await this.couponButton.click();
+        await this.couponApplied.waitFor();
+        console.log(await this.couponApplied.textContent());
         await this.page.waitForLoadState('networkidle');
-
     }
 
     async placeOrder()
     {
-        await this.placeOrder.click();
+        await this.orderButton.click();
         await this.page.waitForLoadState('networkidle');
     }
 }

@@ -56,7 +56,6 @@ const {PaymentPage} = require('../pageObjects/PaymentPage');
             await paymentPage.applyCoupon();
             await paymentPage.placeOrder();
 
-            await page.locator('.action__submit').click();
             await expect(page.locator('.hero-primary')).toHaveText(" Thankyou for the order. ");
 
             const confirmedOrderIds = [];
