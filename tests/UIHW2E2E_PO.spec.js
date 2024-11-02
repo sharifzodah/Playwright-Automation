@@ -3,6 +3,7 @@ const {LoginPage} = require('../pageObjects/LoginPage');
 const {DashboardPage} = require('../pageObjects/DashboardPage');
 const {CartPage} = require('../pageObjects/CartPage');
 const {PaymentPage} = require('../pageObjects/PaymentPage');
+const {ConfirmationPage} = require('../pageObjects/ConfirmationPage');
     
     // @positive-testCase
     test('E2E Checkout test', async ({page})=>
@@ -58,7 +59,8 @@ const {PaymentPage} = require('../pageObjects/PaymentPage');
             await paymentPage.placeOrder();
 
             // Order summary verification
-            await paymentPage.verifyOrderConfirmationSummaryDetails(productsFromCart, totalAmount);
+            const confirmationPage = new ConfirmationPage(page, expect);
+            await confirmationPage.verifyOrderConfirmationSummaryDetails(productsFromCart, totalAmount);
 
             // Order History
             await page.locator('button[routerlink="/dashboard/myorders"]').click();
