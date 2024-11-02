@@ -15,7 +15,12 @@ class PaymentPage
         this.couponButton = page.locator("[type='submit']");
         this.couponApplied = page.locator("text=* Coupon Applied");
         this.orderButton = page.locator('.action__submit');
-        this.cartItemsBox = page.locator('.col-md-5')
+        this.cartItemsBox = page.locator('.col-md-5');
+        this.orderConfBoxes = page.locator('.box');
+        this.orderConfHeader = page.locator('.hero-primary');
+        this.orderConfSummary = page.locator('.order-summary .title');
+        this.orderConfItemIds = page.locator('.em-spacer-1').nth(1);
+        this.orderConfEmail = page.locator('.links');
     }
 
     async loadCartItems()
@@ -30,20 +35,17 @@ class PaymentPage
         this.expect(header.trim()).toBe('Payment Method');
     }
 
-    async verifyItemsInPaymentSection2(productsAddedToCart)
+    async verifyOrderConfirmationSummaryDetails()
     {
-        const productsFromCart = [];
-        for(let i=0; i<productsAddedToCart.length; i++){
-            const productName = await this.itemTitles.nth(i).textContent();
-            console.log("Item Name: ", productName);
-            this.expect(await productsAddedToCart.includes(productName)).toBeTruthy();
-        }
+        //verify header
+        await this.expect(this.orderConfHeader).toHaveText(" Thankyou for the order. ");
+        console.log(await this.orderConfHeader.textContent());
     }
 
     async verifyItemsInPaymentSection(productsFromCart)
     {
         for(let i = 0; i < productsFromCart.length; i++){
-            const itemTitle = await this.page.locator('.item__title').nth(i).textContent();
+            const itemTitle = await this.itemTitles.nth(i).textContent();
             console.log(itemTitle);
             this.expect(await productsFromCart.filter(product => product.productName === itemTitle)).toBeTruthy();
         }
