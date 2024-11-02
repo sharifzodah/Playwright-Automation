@@ -4,6 +4,7 @@ const {DashboardPage} = require('../pageObjects/DashboardPage');
 const {CartPage} = require('../pageObjects/CartPage');
 const {PaymentPage} = require('../pageObjects/PaymentPage');
 const {ConfirmationPage} = require('../pageObjects/ConfirmationPage');
+const fs = require('fs'); // Import file system module
     
     // @positive-testCase
     test('E2E Checkout test', async ({page})=>
@@ -59,8 +60,9 @@ const {ConfirmationPage} = require('../pageObjects/ConfirmationPage');
             await paymentPage.placeOrder();
 
             // Order summary verification
-            const confirmationPage = new ConfirmationPage(page, expect);
-            await confirmationPage.verifyOrderConfirmationSummaryDetails(productsFromCart, totalAmount);
+            const confirmationPage = new ConfirmationPage(page, expect, fs);
+            const confirmedOrderIds = await confirmationPage.verifyOrderConfirmationSummaryDetails(productsFromCart, totalAmount);
+            await confirmationPage.downloadInvoice();
 
             // Order History
             await page.locator('button[routerlink="/dashboard/myorders"]').click();
@@ -73,7 +75,7 @@ const {ConfirmationPage} = require('../pageObjects/ConfirmationPage');
             }
             console.log(orderIdDetails);
 
-            for(let i=0; i<confirmedOrderIds.length; i++){
+            for(let i=0; i<productsFromCart.length; i++){
                 expect(orderIdDetails.includes(confirmedOrderIds[i])).toBeTruthy();
             }
             // Split view and delete buttons' locators
