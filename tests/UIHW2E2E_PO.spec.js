@@ -41,6 +41,7 @@ const {PaymentPage} = require('../pageObjects/PaymentPage');
             const cartPage = new CartPage(page, expect);
             await cartPage.verifyHeader();
             const productsFromCart = await cartPage.verifyAddedItemsInCart(productsAddedToCart);
+            console.log("From cart:\t", productsFromCart.length);
             const totalAmount = await cartPage.verifyTotalAmount(productsAddedToCart.length);
             await cartPage.checkOut();
 
@@ -56,14 +57,8 @@ const {PaymentPage} = require('../pageObjects/PaymentPage');
             await paymentPage.applyCoupon();
             await paymentPage.placeOrder();
 
-            await expect(page.locator('.hero-primary')).toHaveText(" Thankyou for the order. ");
-
-            const confirmedOrderIds = [];
-            for(let i=0; i<itemNo.length; i++){
-                const confOrderId = await page.locator(".em-spacer-1 .ng-star-inserted").nth(i).textContent();
-                confirmedOrderIds.push(confOrderId.replaceAll("|", '').trim());
-            }
-            console.log(confirmedOrderIds);
+            // Order summary verification
+            await paymentPage.verifyOrderConfirmationSummaryDetails(productsFromCart, totalAmount);
 
             // Order History
             await page.locator('button[routerlink="/dashboard/myorders"]').click();

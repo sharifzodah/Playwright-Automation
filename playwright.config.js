@@ -1,12 +1,13 @@
 // @ts-check
 const { devices } = require('@playwright/test');
+const { TIMEOUT } = require('dns/promises');
 
 const config = {
   testDir: './tests',
   /* Maximum time one test can run for. */
-  TIMEOUT: 300 * 1000,
+  timeout: 300 * 1000,
   expect: {
-    TIMEOUT: 5000
+    timeout: 5000
   },
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/doc*/
