@@ -1,10 +1,10 @@
 {
     "userName" : "qasdet1544@gmail.com",
-             "password" : "ThisScenarioFailedNoSpecialCharactersInPwd2024",
-             "ccNumber" : "4587 8874 6621 3315",
-             "CVV" : "988",
-             "firstName" : "QA SDET",
-             "coupon" : "rahulshettyacademy",
-             "cardDetails" : ["ccNumber", "CVV", "firstName", "coupon"],
-             "countryName" : "United States"
+    "password" : "ThisScenarioFailedNoSpecialCharactersInPwd2024",
+    "ccNumber" : "4587 8874 6621 3315",
+    "CVV" : "988",
+    "firstName" : "QA SDET",
+    "coupon" : "rahulshettyacademy",
+    "cardDetails" : ["ccNumber", "CVV", "firstName", "coupon"],
+    "countryName" : "United States"
 }
