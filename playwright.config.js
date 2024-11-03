@@ -4,12 +4,12 @@ const { devices } = require('@playwright/test');
 const config = {
   testDir: './tests',
   /* Maximum time one test can run for. */
-  timeout: 30 * 1000,
+  timeout: 50 * 1000,
   expect: {
     timeout: 5000
   },
   reporter: 'html',
-  // Run command: --config playwright.config.js --project=safari
+  // Run command: --config playwright.config.js --project=safari/chrome/firefox
   projects: [
     {
     name : 'chrome',
@@ -18,7 +18,7 @@ const config = {
       browserName: 'chromium', // 'webkit' for safari  | 'chromium' for chrome  | 'firefox' for firefox
       headless: false,
       screenshot: 'only-on-failure',
-      //trace: 'retain-on-failure',
+      trace: 'retain-on-failure',
     }
     },
     {
@@ -28,9 +28,19 @@ const config = {
         browserName: 'webkit', // 'webkit' for safari  | 'chromium' for chrome  | 'firefox' for firefox
         headless: false,
         screenshot: 'only-on-failure',
-        //trace: 'retain-on-failure',
+        trace: 'retain-on-failure',
       }
       },
+      {
+        name : 'firefox',
+        use: {
+    
+          browserName: 'firefox', // 'webkit' for safari  | 'chromium' for chrome  | 'firefox' for firefox
+          headless: false,
+          screenshot: 'only-on-failure',
+          trace: 'retain-on-failure',
+        }
+        },
   ]
   /* Shared settings for all the projects below. See https://playwright.dev/doc*/
   // use: {
