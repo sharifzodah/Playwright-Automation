@@ -57,6 +57,7 @@ class OrderHistoryPage {
         console.log(itemPrices);
         for (let i = 0; i < viewButtons.length; i++) {
             await viewButtons[i].click();
+            await this.page.waitForLoadState('networkidle');
             await this.orderSummaryBox.waitFor();
             const orderIdSummary = await this.summaryOrderId.textContent();
             await this.expect(orderIdDetails.includes(orderIdSummary)).toBeTruthy();

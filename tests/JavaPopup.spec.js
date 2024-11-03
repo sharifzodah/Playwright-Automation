@@ -26,7 +26,7 @@ test("Screenshot and Visual comparison", async({page}) =>
         await expect(page.locator("#displayed-text")).toBeHidden();
     });
 
-test.only("Landing Page Visual comparison", async({page}) =>
+test("Landing Page Visual comparison", async({page}) =>
         {
             // await page.goto("https://www.bankofamerica.com");
             // expect(await page.screenshot()).toMatchSnapshot('landing.png');

@@ -100,7 +100,7 @@ test('UI Controls test', async ({page})=>
     });
 
     // @positive-testCase
-test.only('Child window handling test', async ({browser})=>
+test('Child window handling test', async ({browser})=>
     {
     const context = await browser.newContext();
     const page = await context.newPage();

@@ -36,7 +36,7 @@ test('Add to Cart and Checkout test', async ()=>
         }
         await page.getByRole("listitem").getByRole("button", {name: "Cart"}).click();
         await page.locator("div li").first().waitFor();
-        expect(page.getByText(productName)).toBeVisible();
+        await expect(page.getByText(productName)).toBeVisible();
         await page.getByRole("button", {name: "Checkout"}).click();
         await page.getByPlaceholder("Select Country").pressSequentially("chi");
         await page.getByRole("button", {name: "China"}).nth(0).click();

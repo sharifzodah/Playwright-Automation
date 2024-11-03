@@ -68,14 +68,16 @@ const exp = require('constants');
             const cart = page.locator('.cart')
             const cartArr = [];
             for(let i=0; i<productArr.length; i++){
-                cartArr.push(await cart.locator('li h3').nth(i).textContent());
+                await page.waitForLoadState('networkidle');
+                let cartItem = await cart.locator('li h3').nth(i).textContent();
+                cartArr.push(cartItem);
             }
             const itemNo = [];
             for(let i=0; i<cartArr.length; i++){
                 const id = await cart.locator('p.itemNumber').nth(i).textContent();
                 itemNo.push(id.replace("#", ""));
                 // expect(productArr[i]).toBe(cartArr[i]);
-                expect(productArr.includes(cartArr[i])).toBeTruthy();
+                await expect(productArr.includes(cartArr[i])).toBeTruthy();
             }
             const totalAmnt = await page.locator('span.value').last().textContent();
             console.log(totalAmnt)
@@ -109,6 +111,7 @@ const exp = require('constants');
             }
 
             await page.locator('[placeholder="Select Country"]').pressSequentially('unit', {delay: 150});
+            await page.waitForLoadState('networkidle');
             const countryOpts = page.locator('.ta-results');
             await countryOpts.waitFor();
             const contryCount = await countryOpts.locator('button').count();

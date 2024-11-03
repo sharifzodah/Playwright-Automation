@@ -14,7 +14,7 @@ test.beforeAll( async ()=>
 
 });
     // @positive-testCase
-    test.only('Place Order w/API test', async ({page})=>
+    test('Place Order w/API test', async ({page})=>
         {
             await page.addInitScript(value => {
                 window.localStorage.setItem('token', value);

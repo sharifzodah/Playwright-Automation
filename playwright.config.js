@@ -5,7 +5,7 @@ const { permission } = require('process');
 const config = {
   testDir: './tests',
   retries: 1, // retries test run for flaky test
-  workers: 1, // will not start test in default parallel mode that is 5 workers,
+  workers: 3, // will not start test in default parallel mode that is 5 workers,
               // instead will trigger one by one
               // worker - test execution environment
   /* Maximum time one test can run for. */
@@ -21,7 +21,7 @@ const config = {
     use: {
 
       browserName: 'chromium', // 'webkit' for safari  | 'chromium' for chrome  | 'firefox' for firefox
-      headless: false,
+      headless: true,
       screenshot: 'only-on-failure',
       trace: 'retain-on-failure', // logs trace only failed tests
       video: 'retain-on-failure', // logs video only failed tests

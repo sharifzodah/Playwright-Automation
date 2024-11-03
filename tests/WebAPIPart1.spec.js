@@ -19,7 +19,7 @@ test.beforeAll( async ()=>
 //                        4. Ctrl+Shift P => type Debug npm Script
 
 // @positive-testCase
-    test('Place Order test', async ({page})=>
+    test.skip('Place Order test', async ({page})=>
         {
             await page.addInitScript(value => {
                 window.localStorage.setItem('token', value);
@@ -50,7 +50,7 @@ test.beforeAll( async ()=>
         });
 
      // @positive-testCase
-     test('Delete 1 order w/Special Locators test', async ({page})=>
+     test.skip('Delete 1 order w/Special Locators test', async ({page})=>
         {
             await page.addInitScript(value => {
                 window.localStorage.setItem('token', value);
@@ -87,7 +87,7 @@ test.beforeAll( async ()=>
         });
 
         // @positive-testCase
-    test.only('Place Order w/API test', async ({page})=>
+    test('Place Order w/API test', async ({page})=>
         {
             await page.addInitScript(value => {
                 window.localStorage.setItem('token', value);
@@ -103,7 +103,6 @@ test.beforeAll( async ()=>
                 if(response.orderId.includes(orderIdDetail)){
                     console.log(orderIdDetail);
                     await orderIdsLoc.nth(i).locator("button").first().click();
-                    await page.pause();
                     break;
                 }
             }

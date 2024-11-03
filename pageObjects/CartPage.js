@@ -22,6 +22,7 @@ class CartPage
     async verifyAddedItemsInCart(productsAddedToCart)
     {
         const productsFromCart = [];
+        await this.page.waitForLoadState('networkidle');
         for(let i=0; i<productsAddedToCart.length; i++){
             let productNo = await this.itemIDs.nth(i).textContent();
             productNo = productNo.replace("#", "");

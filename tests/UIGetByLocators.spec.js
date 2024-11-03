@@ -56,7 +56,7 @@ const path = require('path');
         });
 
             // @positive-testCase
-    test.only('Login and Checkout Special Locators test', async ({page})=>
+    test('Login and Checkout Special Locators test', async ({page})=>
         {
             const userLogin = 'qasdet1544@gmail.com';
             const userPwd = 'ThisScenarioFailedNoSpecialCharactersInPwd2024';
@@ -86,6 +86,5 @@ const path = require('path');
             await expect(page.getByText("Thankyou for the order.")).toBeVisible();
             const orderId = await page.locator("td label").nth(1).textContent();
 
-            await page.pause();
 
         });
