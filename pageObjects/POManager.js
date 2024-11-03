@@ -3,6 +3,7 @@ const {DashboardPage} = require('../pageObjects/DashboardPage');
 const {CartPage} = require('../pageObjects/CartPage');
 const {PaymentPage} = require('../pageObjects/PaymentPage');
 const {ConfirmationPage} = require('../pageObjects/ConfirmationPage');
+const {OrderHistoryPage} = require('../pageObjects/OrderHistoryPage');
 
 class POManager{
 
@@ -16,6 +17,7 @@ class POManager{
         this.cartPage = new CartPage(this.page, this.expect);
         this.paymentPage = new PaymentPage(this.page, this.expect);
         this.confirmationPage = new ConfirmationPage(this.page, this.expect, this.fs);
+        this.orderHistoryPage = new OrderHistoryPage(this.page, this.expect);
     }
 
     getLoginPage(){
@@ -36,6 +38,10 @@ class POManager{
 
     getConfirmationPage(){
         return this.confirmationPage;
+    }
+
+    getOrderHistoryPage(){
+        return this.orderHistoryPage;
     }
 }
 

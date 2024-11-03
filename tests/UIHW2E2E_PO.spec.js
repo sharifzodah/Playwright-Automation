@@ -49,7 +49,7 @@ const fs = require('fs'); // Import file system module
             await paymentPage.loadCartItems();
             await paymentPage.verifyHeader();
             await paymentPage.verifyItemsInPaymentSection(productsFromCart);
-            await paymentPage.verifyTotalAmount(productsAddedToCart.length, totalAmount);
+            const itemPrices = await paymentPage.verifyTotalAmount(productsAddedToCart.length, totalAmount);
             await paymentPage.verifyUserName(userName);
             await paymentPage.fillOutCardDetails(cardDetails);
             await paymentPage.fillOutShippingDetails(countryName);
@@ -62,52 +62,11 @@ const fs = require('fs'); // Import file system module
             await confirmationPage.downloadInvoice();
 
             // Order History
-            await page.locator('button[routerlink="/dashboard/myorders"]').click();
-            await page.locator('tbody').waitFor();
-            const orderIdsLoc = page.locator('tbody tr');
-            const orderIdDetails = [];
-            for(let i=0; i<await orderIdsLoc.count(); i++){
-                const orderIdDet = await orderIdsLoc.nth(i).locator('th').textContent();
-                orderIdDetails.push(orderIdDet);
-            }
-            console.log(orderIdDetails);
-
-            for(let i=0; i<productsFromCart.length; i++){
-                expect(orderIdDetails.includes(confirmedOrderIds[i])).toBeTruthy();
-            }
-            // Split view and delete buttons' locators
-            const orderBtnLoc = orderIdsLoc.locator('button');
-            console.log(await orderBtnLoc.count());
-            const viewBtnLoc = [];
-            const deleteBtnLoc = [];
-            for(let i=0; i< await orderBtnLoc.count();i++){
-                if(i % 2 === 0){
-                    viewBtnLoc.push(orderBtnLoc.nth(i));
-                } 
-            }
-
-            // Verify each order details
-            for(let i=0; i<viewBtnLoc.length; i++){
-                await viewBtnLoc[i].click();
-                await page.locator('.email-container').waitFor();
-                const orderIdSummary = await page.locator('.col-text').textContent();
-                expect(orderIdDetails.includes(orderIdSummary)).toBeTruthy();
-                
-                const addressSummary = page.locator('.text');              
-                const billEmail = await addressSummary.nth(0).textContent();
-                const deliveryEmail = await addressSummary.nth(2).textContent();
-                const billCountry = await addressSummary.nth(1).textContent();
-                const deliveryCountry = await addressSummary.nth(3).textContent();
-                expect(billEmail).toBe(deliveryEmail);
-                expect(billEmail.trim()).toBe(userName);
-                expect(billCountry).toBe(deliveryCountry);
-                expect(billCountry.includes(countryName)).toBeTruthy();
-                await page.locator('.-teal').click();
-                await page.locator('tbody').waitFor();
-            }
-
-
-
+            const orderHistoryPage = poManager.getOrderHistoryPage(page, expect);
+            await orderHistoryPage.loadOrdersItems();
+            await orderHistoryPage.verifyOrdersHeader();
+            const orderIdDetailsFromOrderHistory = await orderHistoryPage.verifyLastOrderIDs(confirmedOrderIds);
+            await orderHistoryPage.verifyEachOrderDetails(orderIdDetailsFromOrderHistory, productsAddedToCart, 
+                itemPrices, userName, countryName);
             // await page.pause()
-        
         });

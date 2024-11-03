@@ -42,13 +42,17 @@ class PaymentPage
 
     async verifyTotalAmount(itemCount, totalAmount)
     {
-        let itemsTotal = 0
+        let itemsTotal = 0;
+        let itemPrices = [];
         for(let i = 0; i < itemCount; i++){
             let itemPrice = await this.itemPrices.nth(i).textContent();
-            itemsTotal += parseFloat(itemPrice.replace("$", ""), 10);
+            let itemPriceFloat = parseFloat(itemPrice.replace("$", ""), 10);
+            itemPrices.push(itemPriceFloat);
+            itemsTotal += itemPriceFloat;
         }
         console.log("Total Amount:\t$",totalAmount, "\nItems Total:\t$",itemsTotal);
         this.expect(itemsTotal).toBe(totalAmount);
+        return itemPrices;
     }
 
     async verifyUserName(userName)
