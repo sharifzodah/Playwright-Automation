@@ -1,10 +1,11 @@
 // @ts-check
 const { devices } = require('@playwright/test');
+const { permission } = require('process');
 
 const config = {
   testDir: './tests',
   /* Maximum time one test can run for. */
-  timeout: 50 * 1000,
+  timeout: 30 * 1000,
   expect: {
     timeout: 5000
   },
@@ -18,7 +19,12 @@ const config = {
       browserName: 'chromium', // 'webkit' for safari  | 'chromium' for chrome  | 'firefox' for firefox
       headless: false,
       screenshot: 'only-on-failure',
-      trace: 'retain-on-failure',
+      trace: 'retain-on-failure', // logs trace only failed tests
+      video: 'retain-on-failure', // logs video only failed tests
+      ignoreHttpsErrors: true,  // handle ssl certifications
+      permissions: ['geolocation'], // handle Allow location pop up
+      // viewport: {width:720, height:720},
+      ...devices['iPhone 15 Pro Max'],
     }
     },
     {
@@ -29,6 +35,7 @@ const config = {
         headless: false,
         screenshot: 'only-on-failure',
         trace: 'retain-on-failure',
+        ...devices['iPhone 15 Pro Max'],
       }
       },
       {
