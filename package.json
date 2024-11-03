@@ -3,7 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "npx playwright test tests/UIHW2E2E_PO.spec.js --headed"
+    "chromeRegression": "npx playwright test --config playwright.config.js --project=chrome",
+    "safariRegression": "npx playwright test --config playwright.config.js --project=safari",
+    "firefoxRegression": "npx playwright test --config playwright.config.js --project=firefox",
+    "APITest": "npx playwright test --config playwright.config.js --project=chrome --grep @API",
+    "allureTest": "npx playwright test --config playwright.config.js --project=chrome --reporter=line,allure-playwright",
+    "allureReport": "allure generate ./allure-results --clean",
+    "openAllure": "allure open ./allure-report"
+
   },
   "keywords": [],
   "author": "",

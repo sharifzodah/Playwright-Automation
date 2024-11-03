@@ -165,6 +165,7 @@ const exp = require('constants');
 
             // Verify each order details
             for(let i=0; i<viewBtnLoc.length; i++){
+                await viewBtnLoc[i].waitFor();
                 await viewBtnLoc[i].click();
                 await page.locator('.email-container').waitFor();
                 const orderIdSummary = await page.locator('.col-text').textContent();
