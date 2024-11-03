@@ -1,9 +1,5 @@
 const {test, expect} = require('@playwright/test');
-const {LoginPage} = require('../pageObjects/LoginPage');
-const {DashboardPage} = require('../pageObjects/DashboardPage');
-const {CartPage} = require('../pageObjects/CartPage');
-const {PaymentPage} = require('../pageObjects/PaymentPage');
-const {ConfirmationPage} = require('../pageObjects/ConfirmationPage');
+const {POManager} = require('../pageObjects/POManager');
 const fs = require('fs'); // Import file system module
     
     // @positive-testCase
@@ -16,10 +12,11 @@ const fs = require('fs'); // Import file system module
             const name = 'QA SDET';
             const coupon = 'rahulshettyacademy';
             const cardDetails = [ccNumber, cvv, name, coupon];
-            const countryName = 'United States'
-            const loginPage = new LoginPage(page);
+            const countryName = 'United States';
+            const poManager = new POManager(page, expect, fs);
             
             //Landing to the page
+            const loginPage = poManager.getLoginPage();
             await loginPage.landingPage();
             const pageTitle = await loginPage.getPageTitle();
             let currentUrl = await loginPage.getLoginURL();
@@ -30,7 +27,7 @@ const fs = require('fs'); // Import file system module
             await loginPage.validLogin(userName, password);
 
             //Adding n number of random items to cart
-            const dashboardPage = new DashboardPage(page);
+            const dashboardPage = poManager.getDashboardPage(page);
             currentUrl = await dashboardPage.getDashboardURL();
             expect(currentUrl).toContain('dashboard');
 
@@ -40,7 +37,7 @@ const fs = require('fs'); // Import file system module
             expect(currentUrl).toContain('cart');
 
             // Cart Section
-            const cartPage = new CartPage(page, expect);
+            const cartPage = poManager.getCartPage(page, expect);
             await cartPage.verifyHeader();
             const productsFromCart = await cartPage.verifyAddedItemsInCart(productsAddedToCart);
             console.log("From cart:\t", productsFromCart.length);
@@ -48,7 +45,7 @@ const fs = require('fs'); // Import file system module
             await cartPage.checkOut();
 
             // Payment Section
-            const paymentPage = new PaymentPage(page, expect);
+            const paymentPage = poManager.getPaymentPage(page, expect);
             await paymentPage.loadCartItems();
             await paymentPage.verifyHeader();
             await paymentPage.verifyItemsInPaymentSection(productsFromCart);
@@ -59,8 +56,8 @@ const fs = require('fs'); // Import file system module
             await paymentPage.applyCoupon();
             await paymentPage.placeOrder();
 
-            // Order summary verification
-            const confirmationPage = new ConfirmationPage(page, expect, fs);
+            // Confirmation page - Order summary verification
+            const confirmationPage = poManager.getConfirmationPage(page, expect, fs);
             const confirmedOrderIds = await confirmationPage.verifyOrderConfirmationSummaryDetails(productsFromCart, totalAmount);
             await confirmationPage.downloadInvoice();
 
