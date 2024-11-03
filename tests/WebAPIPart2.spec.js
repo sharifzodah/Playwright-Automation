@@ -18,7 +18,7 @@ test.beforeAll( async ({browser})=>
     });
 
 // @positive-testCase
-test('Add to Cart and Checkout test', async ()=>
+test('@API Add to Cart and Checkout test', async ()=>
     {
         const productName = 'ZARA COAT 3';
         const page = await webContext.newPage();
@@ -47,7 +47,7 @@ test('Add to Cart and Checkout test', async ()=>
     });
 
 // @positive-testCase
-test('Delete order w/Special Locators test', async ()=>
+test('@API Delete order w/Special Locators test', async ()=>
     {
         const page = await webContext.newPage();
         await page.goto("https://rahulshettyacademy.com/client/");

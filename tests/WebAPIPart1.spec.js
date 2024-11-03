@@ -19,11 +19,11 @@ test.beforeAll( async ()=>
 //                        4. Ctrl+Shift P => type Debug npm Script
 
 // @positive-testCase
-    test.skip('Place Order test', async ({page})=>
+    test('@API Place Order test', async ({page})=>
         {
             await page.addInitScript(value => {
                 window.localStorage.setItem('token', value);
-            }, token);
+            }, response.token);
 
             const ccNumber = '4587 8874 6621 3315';
             const cvv = '988';
@@ -50,11 +50,11 @@ test.beforeAll( async ()=>
         });
 
      // @positive-testCase
-     test.skip('Delete 1 order w/Special Locators test', async ({page})=>
+     test('@API Delete 1 order w/Special Locators test', async ({page})=>
         {
             await page.addInitScript(value => {
                 window.localStorage.setItem('token', value);
-            }, token);
+            }, response.token);
 
             const ccNumber = '4587 8874 6621 3315';
             const cvv = '988';
@@ -87,7 +87,7 @@ test.beforeAll( async ()=>
         });
 
         // @positive-testCase
-    test('Place Order w/API test', async ({page})=>
+    test('@API Place Order w/API test', async ({page})=>
         {
             await page.addInitScript(value => {
                 window.localStorage.setItem('token', value);

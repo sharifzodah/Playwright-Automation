@@ -39,7 +39,7 @@ const config = {
         headless: false,
         screenshot: 'only-on-failure',
         trace: 'retain-on-failure',
-        ...devices['iPhone 15 Pro Max'],
+        // ...devices['iPhone 15 Pro Max'],
       }
       },
       {
