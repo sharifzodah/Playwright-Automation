@@ -72,6 +72,10 @@ test('E2E Checkout test', async ({ page }) => {
 });
 
 // @testCase with injecting test data from test-base
+//customTest.describe.configure({mode: 'parallel'}) // if we have multiple tests in one file it will trigger them simultaneously
+//customTest.describe.configure({mode: 'serial'}) // it will trigger tests serially, however if one test failed it will skip rest tests
+// by default multiple tests will run serially no matter if any of them failed
+
 customTest('E2E Checkout test from test-base', async ({ page, testDataForOrder }) => {
 
     const cardDetails = [testDataForOrder.ccNumber, testDataForOrder.CVV, testDataForOrder.firstName, testDataForOrder.coupon];

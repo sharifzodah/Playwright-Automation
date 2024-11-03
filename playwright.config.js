@@ -4,7 +4,10 @@ const { permission } = require('process');
 
 const config = {
   testDir: './tests',
-  retries: 1,
+  retries: 1, // retries test run for flaky test
+  workers: 1, // will not start test in default parallel mode that is 5 workers,
+              // instead will trigger one by one
+              // worker - test execution environment
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
   expect: {
