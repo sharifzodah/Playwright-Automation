@@ -72,7 +72,7 @@ test('E2E Checkout test', async ({ page }) => {
 });
 
 // @testCase with injecting test data from test-base
-customTest('E2E Checkout test from test-base', async ({ page, testDataForOrder }) => {
+customTest.only('E2E Checkout test from test-base', async ({ page, testDataForOrder }) => {
 
     const cardDetails = [testDataForOrder.ccNumber, testDataForOrder.CVV, testDataForOrder.firstName, testDataForOrder.coupon];
     const poManager = new POManager(page, expect, fs);
