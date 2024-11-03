@@ -1,23 +1,46 @@
 // @ts-check
 const { devices } = require('@playwright/test');
-const { TIMEOUT } = require('dns/promises');
 
 const config = {
   testDir: './tests',
   /* Maximum time one test can run for. */
-  timeout: 300 * 1000,
+  timeout: 30 * 1000,
   expect: {
     timeout: 5000
   },
   reporter: 'html',
+  // Run command: --config playwright.config.js --project=safari
+  projects: [
+    {
+    name : 'chrome',
+    use: {
+
+      browserName: 'chromium', // 'webkit' for safari  | 'chromium' for chrome  | 'firefox' for firefox
+      headless: false,
+      screenshot: 'only-on-failure',
+      //trace: 'retain-on-failure',
+    }
+    },
+    {
+      name : 'safari',
+      use: {
+  
+        browserName: 'webkit', // 'webkit' for safari  | 'chromium' for chrome  | 'firefox' for firefox
+        headless: false,
+        screenshot: 'only-on-failure',
+        //trace: 'retain-on-failure',
+      }
+      },
+  ]
   /* Shared settings for all the projects below. See https://playwright.dev/doc*/
-  use: {
+  // use: {
 
-    browserName: 'chromium', // 'webkit' for safari  | 'chromium' for chrome  | 'firefox' for firefox
-    headless: false,
-    //trace: 'retain-on-failure',
+  //   browserName: 'chromium', // 'webkit' for safari  | 'chromium' for chrome  | 'firefox' for firefox
+  //   headless: false,
+  //   screenshot: 'only-on-failure',
+  //   //trace: 'retain-on-failure',
 
-  },
+  // },
 };
 
 module.exports = config;

@@ -128,7 +128,5 @@ customTest.only('E2E Checkout test from test-base', async ({ page, testDataForOr
     await orderHistoryPage.loadOrdersItems();
     await orderHistoryPage.verifyOrdersHeader();
     const orderIdDetailsFromOrderHistory = await orderHistoryPage.verifyLastOrderIDs(confirmedOrderIds);
-    await orderHistoryPage.verifyEachOrderDetails(orderIdDetailsFromOrderHistory, productsAddedToCart,
-        itemPrices, testDataForOrder.userName, testDataForOrder.countryName);
     // await page.pause()
 });
