@@ -3,6 +3,7 @@ const { devices } = require('@playwright/test');
 const { permission } = require('process');
 
 // to check downloaded trace.zip file - https://trace.playwright.dev/
+// to run customized test script command from package.json: npm run APITest
 
 const config = {
   testDir: './tests',
