@@ -4,6 +4,7 @@ const { permission } = require('process');
 
 const config = {
   testDir: './tests',
+  retries: 1,
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
   expect: {
@@ -24,7 +25,7 @@ const config = {
       ignoreHttpsErrors: true,  // handle ssl certifications
       permissions: ['geolocation'], // handle Allow location pop up
       // viewport: {width:720, height:720},
-      ...devices['iPhone 15 Pro Max'],
+      // ...devices['iPhone 15 Pro Max'],
     }
     },
     {
