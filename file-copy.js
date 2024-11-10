@@ -90,3 +90,5 @@ async function main() {
 
 // Run the main function
 main();
+
+module.exports = { main };
