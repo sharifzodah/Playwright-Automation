@@ -13,6 +13,7 @@ function isStringPalindrome(str) {
         return str[i] !== str[j] ? false : true;
     }
 }
-s = null;
+s = "null";
+console.log(s.charCodeAt(3))
 const result = isStringPalindrome(s);
 console.log(result)
